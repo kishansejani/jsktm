@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { ArrowRight, ArrowUpRight, ShieldCheck, Gauge, Wrench, Cpu, Check, MousePointer2, Move3d, Phone, Mail, MessageCircle } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, ShieldCheck, Gauge, Wrench, Cpu, Check, MousePointer2, Move3d, Phone, Mail, MessageCircle, Users, Factory, CalendarCheck } from 'lucide-react'
 import ThreadHero from '../components/ThreadHero.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import MachineFinder from '../components/MachineFinder.jsx'
@@ -145,14 +145,26 @@ export default function Home({ onQuote }) {
                 </div>
               </Spot>
             </Reveal>
-            {[stats[0], stats[1]].map((s, i) => (
+            {[
+              { s: stats[0], Icon: Users, note: 'Textile units served', d: 'M0 34 L25 28 L50 30 L75 18 L100 20 L125 8 L150 4' },
+              { s: stats[1], Icon: Factory, note: 'Machines commissioned', d: 'M0 36 L25 32 L50 24 L75 26 L100 14 L125 10 L150 3' },
+            ].map(({ s, Icon, note, d }, i) => (
               <Reveal key={s.label} delay={0.08 * (i + 1)} className={`bento-cell b-stat b-stat-${i}`}>
-                <Spot className="tile tile-stat">
-                  <strong className="big-num">
+                <Spot className="tile kpi">
+                  <div className="kpi-top">
+                    <span className="kpi-ico"><Icon size={20} /></span>
+                    <span className="kpi-note">{note}</span>
+                  </div>
+                  <strong className="kpi-num">
                     <Counter value={s.value} suffix={s.suffix} />
                   </strong>
-                  <span>{s.label}</span>
-                  <i className="rings" aria-hidden="true" />
+                  <span className="kpi-label">{s.label}</span>
+                  <svg className="kpi-spark" viewBox="0 0 150 40" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id={`kg${i}`} x1="0" x2="1"><stop offset="0" stopColor="#2f6bff" /><stop offset="1" stopColor="#38d6c4" /></linearGradient>
+                    </defs>
+                    <path d={d} fill="none" stroke={`url(#kg${i})`} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+                  </svg>
                 </Spot>
               </Reveal>
             ))}
@@ -178,12 +190,15 @@ export default function Home({ onQuote }) {
               </Spot>
             </Reveal>
             <Reveal delay={0.1} className="bento-cell b-since">
-              <Spot className="tile tile-since">
-                <strong className="big-num">
+              <Spot className="tile kpi kpi-since">
+                <div className="kpi-top">
+                  <span className="kpi-ico"><CalendarCheck size={20} /></span>
+                  <span className="kpi-note">Established</span>
+                </div>
+                <strong className="kpi-num">
                   <Counter value={company.since} plain />
                 </strong>
-                <span>Building machines · {stats[2].value}+ domestic markets</span>
-                <i className="rings" aria-hidden="true" />
+                <span className="kpi-label">{stats[2].value}+ domestic markets served</span>
               </Spot>
             </Reveal>
           </div>
