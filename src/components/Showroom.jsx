@@ -7,6 +7,14 @@ import { SmartImg } from './ui.jsx'
 import { YARN } from './yarn.js'
 import { products } from '../data/site.js'
 
+const getProductThumb = (prod, i) => {
+  if (prod.images && prod.images.length > 0) return prod.images[0]
+  if (prod.remoteImages && prod.remoteImages.length > 0) return prod.remoteImages[0]
+  if (i === 3) return '/hero-main.jpg'
+  if (i === 4) return '/Assembly-Winding-1.jpg'
+  return '/Cone-Winding-1.jpg'
+}
+
 export default function Showroom({ onQuote, id }) {
   const [idx, setIdx] = useState(1)
   const [mode, setMode] = useState('3d')
@@ -40,16 +48,35 @@ export default function Showroom({ onQuote, id }) {
           )}
         </div>
 
-        <div className="show-canvas">
-          <AnimatePresence mode="wait">
-            <motion.div key={`${mode}-${p.slug}-${photo}`} className="show-fill" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-              {mode === '3d' ? (
-                <Viewer3D kind={p.kind} heads={p.heads} color={color} multi={multi} autoRotate={auto} />
-              ) : (
-                <SmartImg src={p.images[photo]} fallbackSrc={p.remoteImages?.[photo]} alt={p.name} className="show-photo" fallbackLabel={p.onRequest ? 'Photos on request' : ''} />
-              )}
-            </motion.div>
-          </AnimatePresence>
+        <div className="show-stage-body">
+          <div className="show-canvas">
+            <AnimatePresence mode="wait">
+              <motion.div key={`${mode}-${p.slug}-${photo}`} className="show-fill" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+                {mode === '3d' ? (
+                  <Viewer3D kind={p.kind} heads={p.heads} color={color} multi={multi} autoRotate={auto} />
+                ) : (
+                  <SmartImg src={p.images[photo]} fallbackSrc={p.remoteImages?.[photo]} alt={p.name} className="show-photo" fallbackLabel={p.onRequest ? 'Photos on request' : ''} />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          <div className="show-mobile-thumbs" role="tablist" aria-label="Select machine">
+            {products.map((x, i) => (
+              <button
+                key={x.slug}
+                type="button"
+                role="tab"
+                aria-selected={i === idx}
+                className={`sm-thumb ${i === idx ? 'on' : ''}`}
+                onClick={() => pick(i)}
+                aria-label={x.name}
+              >
+                <SmartImg src={getProductThumb(x, i)} fallbackSrc={x.remoteImages?.[0] || '/hero-main.jpg'} alt={x.short} />
+                <span className="sm-thumb-badge">0{i + 1}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {mode === '3d' ? (

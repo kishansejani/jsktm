@@ -256,9 +256,11 @@ body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-in
 .seg button.on { background: var(--blue); color: #fff; box-shadow: 0 8px 20px -8px var(--blue); }
 .chip-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); font-size: 0.82rem; font-weight: 700; color: #cfd9f5; }
 .chip-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+.show-stage-body { display: contents; }
+.show-mobile-thumbs { display: none; }
 .show-canvas { position: relative; flex: 1; min-height: clamp(340px, 42vw, 520px); }
 .show-fill { position: absolute; inset: 0; }
-.show-canvas canvas, .gallery-main canvas { cursor: grab; touch-action: pan-y; }
+.show-canvas canvas, .gallery-main canvas, .anatomy-canvas canvas { cursor: grab; touch-action: pan-y; }
 .show-photo { width: 100%; height: 100%; object-fit: cover; }
 .swatches { display: flex; align-items: center; gap: 10px; padding: 14px 18px 18px; position: relative; z-index: 2; flex-wrap: wrap; }
 .swatches > span { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-right: 4px; }
@@ -667,10 +669,26 @@ textarea { resize: vertical; }
   .systems { grid-template-columns: 1fr; }
   .stat-strip { grid-template-columns: repeat(2, 1fr); }
   .spec-list { grid-template-columns: 1fr; }
+  .show-stage-body { display: flex; position: relative; width: 100%; align-items: stretch; }
+  .show-canvas { flex: 1; min-width: 0; min-height: clamp(340px, 48vw, 440px); }
+  .show-mobile-thumbs { display: flex; flex-direction: column; gap: 8px; justify-content: center; padding: 10px 10px 10px 4px; z-index: 5; flex-shrink: 0; }
+  .sm-thumb { width: 52px; height: 52px; border-radius: 12px; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.16); position: relative; background: var(--card-solid); padding: 0; cursor: pointer; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; }
+  .sm-thumb:hover { border-color: rgba(56, 176, 216, 0.6); }
+  .sm-thumb.on { border-color: var(--cyan); box-shadow: 0 0 16px rgba(56, 176, 216, 0.65); transform: scale(1.06); }
+  .sm-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .sm-thumb-badge { position: absolute; bottom: 2px; right: 2px; font-size: 0.62rem; font-weight: 800; background: rgba(7, 13, 31, 0.88); color: #fff; padding: 1px 4px; border-radius: 4px; line-height: 1; font-family: var(--font-display); }
+  .sm-thumb.on .sm-thumb-badge { background: var(--blue); }
+  .show-tabs { display: none; }
   .anatomy { grid-template-columns: 1fr; gap: 0; }
-  .anatomy-canvas-wrap { order: -1; margin-bottom: 14px; }
-  .anatomy-canvas { height: 300px; }
-  .astep { min-height: 52vh; }
+  .anatomy-canvas-wrap { order: -1; margin-bottom: 16px; }
+  .anatomy-canvas { height: 280px; }
+  .anatomy-canvas canvas { touch-action: pan-y; pointer-events: none; }
+  .anatomy-steps { gap: 12px; }
+  .astep { min-height: auto; padding: 18px 20px; }
+  .astep-static { cursor: default; }
+  .astep-static:hover { transform: none; border-color: var(--line); }
+  .astep-static p { display: block; height: auto; opacity: 1; margin: 8px 0 0; }
+  .anatomy-index { display: none; }
   .photo-stack { padding-bottom: 50px; }
 }
 @media (max-width: 620px) {
@@ -686,6 +704,10 @@ textarea { resize: vertical; }
   .tile-photo { min-height: 340px; }
   .cta-card { border-radius: 26px; }
   .float-chip { padding: 8px 12px; } .float-chip strong { font-size: 1.3rem; }
+}
+@media (max-width: 480px) {
+  .sm-thumb { width: 42px; height: 42px; border-radius: 9px; }
+  .show-mobile-thumbs { gap: 6px; padding-right: 6px; }
 }
 @media (hover: none) { .cursor { display: none; } }
 @media (prefers-reduced-motion: reduce) {
