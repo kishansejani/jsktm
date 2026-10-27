@@ -57,7 +57,7 @@
   --red: #e84030;
   --orange: #f09838;
   --spectrum: linear-gradient(90deg, #0fb5ab, #38b0d8, #2f6bff, #902888, #e84030, #f09838);
-  --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
   --font-body: 'Manrope', 'Segoe UI', system-ui, sans-serif;
   --radius: 26px;
   --maxw: 1240px;
@@ -71,7 +71,7 @@ body { margin: 0; font-family: var(--font-body); background: var(--bg); color: v
 html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after { transition: background-color 0.45s, color 0.45s, border-color 0.45s, box-shadow 0.45s !important; }
 img, svg, canvas { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
-h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.04; margin: 0 0 0.5em; letter-spacing: -0.025em; color: var(--head); }
+h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; margin: 0 0 0.5em; letter-spacing: -0.02em; color: var(--head); }
 h1 { font-size: clamp(2.6rem, 6.4vw, 5.2rem); font-weight: 800; }
 h2 { font-size: clamp(2rem, 4.4vw, 3.4rem); font-weight: 800; }
 h3 { font-size: 1.25rem; font-weight: 700; }
@@ -344,12 +344,12 @@ body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-in
 .tile-over h3 { color: #fff; font-size: 1.6rem; max-width: 460px; }
 .tile-over p { color: #c5d0ea; margin: 0; max-width: 460px; font-size: 0.95rem; }
 .tag { display: inline-block; margin-bottom: 12px; padding: 5px 12px; border-radius: 999px; background: var(--blue); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
-.tile-stat, .tile-since { padding: 32px; display: flex; flex-direction: column; justify-content: flex-end; min-height: 210px; color: #fff; border: 0; }
+.tile-stat, .tile-since { padding: 30px 32px; display: flex; flex-direction: column; justify-content: space-between; min-height: 200px; color: #fff; border: 0; }
 .b-stat-0 .tile { background: linear-gradient(135deg, #1b3b7b, #2f6bff 70%, #38b0d8); }
 .b-stat-1 .tile { background: linear-gradient(135deg, #6a1f8a, #c0306a 55%, #f09838); }
 .b-since .tile { background: linear-gradient(135deg, #0a8f94, #0fb5ab 40%, #2078b8); }
-.big-num { display: block; font-family: var(--font-display); font-weight: 800; font-size: clamp(3.6rem, 7vw, 5.8rem); line-height: 1; letter-spacing: -0.04em; color: #fff; text-shadow: 0 8px 30px rgba(0, 0, 0, 0.25); }
-.tile-stat > span, .tile-since > span { color: rgba(255, 255, 255, 0.88); font-weight: 700; margin-top: 8px; font-size: 1.05rem; }
+.big-num { display: block; font-family: var(--font-display); font-weight: 800; font-size: clamp(2.8rem, 5vw, 4.2rem); line-height: 1.05; letter-spacing: 0; font-variant-numeric: lining-nums tabular-nums; color: #fff; }
+.tile-stat > span, .tile-since > span { color: rgba(255, 255, 255, 0.92); font-weight: 700; margin-top: 6px; font-size: 1rem; letter-spacing: 0.01em; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.3); max-width: 240px; }
 .rings { position: absolute; right: -70px; top: -70px; width: 280px; height: 280px; border-radius: 50%; z-index: 0; pointer-events: none; background: repeating-radial-gradient(circle, transparent 0 22px, rgba(255, 255, 255, 0.14) 22px 24px); transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
 .tile:hover .rings { transform: scale(1.18) rotate(20deg); }
 .tile-stat > *:not(.rings), .tile-since > *:not(.rings) { position: relative; z-index: 1; }
