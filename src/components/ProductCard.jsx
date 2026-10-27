@@ -22,7 +22,7 @@ export default function ProductCard({ product, index = 0, onQuote }) {
             {product.depth3d ? (
               <DepthViewer src={product.depth3d[0]} fallback="3D preview unavailable" />
             ) : (
-              <Viewer3D kind={product.kind} heads={product.heads} color={index} camera={[5.4, 3.2, 6.6]} fallback="3D preview unavailable" />
+              <Viewer3D kind={product.kind} heads={product.heads} color={index} hint={false} camera={[5.4, 3.2, 6.6]} fallback="3D preview unavailable" />
             )}
           </div>
           <span className="pcard-tag">{product.category}</span>

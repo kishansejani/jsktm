@@ -1,4 +1,4 @@
-import { Component, lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Children, cloneElement, Component, lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 
 const MachineCanvas = lazy(() => import('./Scene3D.jsx').then((m) => ({ default: m.MachineCanvas })))
 const HeroCanvas = lazy(() => import('./Scene3D.jsx').then((m) => ({ default: m.HeroCanvas })))
@@ -33,24 +33,44 @@ function Loading() {
   )
 }
 
-/** Mounts the WebGL canvas only while it is near the viewport (saves GPU + battery). */
-function Wrap({ children, fallback }) {
+/** Mounts the WebGL canvas only while it is near the viewport. With `gate`, dragging only works after a click,
+ *  so normal page scrolling (wheel / touch) is never hijacked by the 3D view. */
+function Wrap({ children, fallback, gate = false, hint = true }) {
   const ok = useMemo(hasWebGL, [])
   const ref = useRef(null)
   const [visible, setVisible] = useState(false)
+  const [live, setLive] = useState(!gate)
   useEffect(() => {
     if (!ok || !ref.current) return
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { rootMargin: '150px' })
     io.observe(ref.current)
     return () => io.disconnect()
   }, [ok])
+  useEffect(() => {
+    if (!gate || !live) return
+    const off = (e) => ref.current && !ref.current.contains(e.target) && setLive(false)
+    const leave = (e) => e.pointerType === 'mouse' && setLive(false)
+    const el = ref.current
+    document.addEventListener('pointerdown', off)
+    el.addEventListener('pointerleave', leave)
+    return () => {
+      document.removeEventListener('pointerdown', off)
+      el.removeEventListener('pointerleave', leave)
+    }
+  }, [gate, live])
   if (!ok) return fallback
+  const kid = gate ? Children.map(children, (c) => cloneElement(c, { live })) : children
   return (
-    <div className="v3d-wrap" ref={ref}>
+    <div className={`v3d-wrap ${gate && !live ? 'is-gated' : ''}`} ref={ref}>
       {visible && (
         <Boundary fallback={fallback}>
-          <Suspense fallback={<Loading />}>{children}</Suspense>
+          <Suspense fallback={<Loading />}>{kid}</Suspense>
         </Boundary>
+      )}
+      {gate && !live && visible && (
+        <button type="button" className="v3d-gate" onClick={() => setLive(true)} aria-label="Click to interact with the 3D model">
+          {hint && <span>Click to rotate</span>}
+        </button>
       )}
     </div>
   )
@@ -58,9 +78,9 @@ function Wrap({ children, fallback }) {
 
 const Fallback = ({ children }) => <div className="v3d-fallback">{children || '3D view is not supported on this device.'}</div>
 
-export function Viewer3D({ fallback, ...props }) {
+export function Viewer3D({ fallback, hint = true, ...props }) {
   return (
-    <Wrap fallback={<Fallback>{fallback}</Fallback>}>
+    <Wrap gate hint={hint} fallback={<Fallback>{fallback}</Fallback>}>
       <MachineCanvas {...props} />
     </Wrap>
   )

@@ -309,7 +309,7 @@ function CameraRig({ preset }) {
 }
 
 /* ---------- public canvases ---------- */
-export function MachineCanvas({ kind, heads = 4, color = 0, multi = true, autoRotate = true, zoom = false, camera = [7.6, 4.2, 9.0], fov = 36 }) {
+export function MachineCanvas({ kind, heads = 4, color = 0, multi = true, autoRotate = true, live = true, camera = [7.6, 4.2, 9.0], fov = 36 }) {
   return (
     <Canvas dpr={[1, 1.75]} camera={{ position: camera, fov }} gl={{ antialias: true, alpha: true }}>
       <Lights />
@@ -317,7 +317,7 @@ export function MachineCanvas({ kind, heads = 4, color = 0, multi = true, autoRo
         <Machine kind={kind} heads={heads} color={color} multi={multi} />
         <ContactShadows position={[0, 0, 0]} opacity={0.55} scale={16} blur={2.6} far={4} color="#000814" />
       </group>
-      <OrbitControls enablePan={false} enableZoom={zoom} minDistance={5} maxDistance={13} minPolarAngle={0.35} maxPolarAngle={Math.PI / 2.05} autoRotate={autoRotate} autoRotateSpeed={1.1} makeDefault />
+      <OrbitControls enabled={live} enablePan={false} enableZoom={false} minDistance={5} maxDistance={13} minPolarAngle={0.35} maxPolarAngle={Math.PI / 2.05} autoRotate={autoRotate} autoRotateSpeed={1.1} makeDefault />
     </Canvas>
   )
 }

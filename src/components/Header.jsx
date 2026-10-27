@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Menu, X, Phone, ArrowUpRight, Sun, Moon } from 'lucide-react'
+import { Menu, X, Phone, Mail, ArrowUpRight, Sun, Moon } from 'lucide-react'
 import { Logo, telHref } from './ui.jsx'
 import { Magnetic } from './fx.jsx'
 import { navLinks, company } from '../data/site.js'
@@ -104,6 +104,14 @@ export default function Header({ onQuote }) {
                 <button className="icon-btn" onClick={toggleTheme} aria-label="Toggle theme">
                   {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
                 </button>
+              </div>
+              <div className="drawer-contact">
+                <a href={telHref(company.phones[0])}>
+                  <Phone size={16} /> {company.phones[0]}
+                </a>
+                <a href={`mailto:${company.email}`}>
+                  <Mail size={16} /> {company.email}
+                </a>
               </div>
             </nav>
           </motion.div>

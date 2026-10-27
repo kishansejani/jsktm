@@ -52,8 +52,7 @@ export default function ProductDetail({ onQuote }) {
                   </>
                 ) : mode === '3d' ? (
                   <>
-                    <Viewer3D kind={product.kind} heads={product.heads} zoom />
-                    <span className="drag-hint">Drag to rotate · scroll to zoom</span>
+                    <Viewer3D kind={product.kind} heads={product.heads} />
                   </>
                 ) : (
                   <AnimatePresence mode="wait">

@@ -3,6 +3,7 @@ import { Phone, Mail, MapPin, Send, MessageCircle, CheckCircle2, Facebook, Insta
 import { PageHero, Reveal, telHref, waHref } from '../components/ui.jsx'
 import { buildMessage, validate } from '../components/QuoteModal.jsx'
 import { company, products } from '../data/site.js'
+import { sendEnquiry } from '../lib/sendEnquiry.js'
 
 const empty = { name: '', phone: '', email: '', product: '', message: '' }
 
@@ -10,16 +11,25 @@ export default function Contact() {
   const [f, setF] = useState(empty)
   const [errors, setErrors] = useState({})
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [failed, setFailed] = useState(false)
   const set = (k) => (e) => setF((s) => ({ ...s, [k]: e.target.value }))
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
     const errs = validate(f)
     setErrors(errs)
     if (Object.keys(errs).length) return
-    const subject = encodeURIComponent(`Website enquiry — ${f.product || 'JSK Tex Mech'}`)
-    window.location.href = `mailto:${company.email}?subject=${subject}&body=${encodeURIComponent(buildMessage(f))}`
-    setSent(true)
+    setSending(true)
+    setFailed(false)
+    try {
+      await sendEnquiry(f, `Website enquiry — ${f.product || 'JSK Tex Mech'}`)
+      setSent(true)
+    } catch {
+      setFailed(true)
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -69,8 +79,8 @@ export default function Contact() {
             {sent ? (
               <div className="modal-done">
                 <CheckCircle2 size={48} />
-                <h3>Your email app should open now</h3>
-                <p>Send the pre-filled message and we’ll respond shortly. Or reach us instantly on WhatsApp.</p>
+                <h3>Message sent — thank you!</h3>
+                <p>Our team has received your enquiry and will respond shortly. Need it faster? Reach us instantly on WhatsApp.</p>
                 <a className="btn btn-accent" href={waHref(buildMessage(f))} target="_blank" rel="noreferrer">
                   <MessageCircle size={16} /> Send on WhatsApp
                 </a>
@@ -111,8 +121,13 @@ export default function Contact() {
                   Message
                   <textarea rows={5} value={f.message} onChange={set('message')} placeholder="Yarn type, count range, package type, number of heads…" />
                 </label>
-                <button className="btn btn-accent btn-lg" type="submit">
-                  Send message <Send size={16} />
+                {failed && (
+                  <p className="form-error" role="alert">
+                    Couldn’t send right now. Please try again, or <a href={`mailto:${company.email}?subject=${encodeURIComponent('Website enquiry')}&body=${encodeURIComponent(buildMessage(f))}`}>email us</a> / <a href={waHref(buildMessage(f))} target="_blank" rel="noreferrer">WhatsApp us</a>.
+                  </p>
+                )}
+                <button className="btn btn-accent btn-lg" type="submit" disabled={sending}>
+                  {sending ? 'Sending…' : 'Send message'} <Send size={16} />
                 </button>
               </form>
             )}

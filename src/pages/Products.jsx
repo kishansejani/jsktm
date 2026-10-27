@@ -37,7 +37,7 @@ export default function Products({ onQuote }) {
 
       <section className="section">
         <div className="container">
-          <SectionHead eyebrow="3D showroom" title="Rotate every machine" text="Drag to spin, scroll to zoom, switch yarn colours or flip to real photographs." />
+          <SectionHead eyebrow="3D showroom" title="Rotate every machine" text="Click and drag to spin, switch yarn colours or flip to real photographs." />
           <Showroom onQuote={onQuote} />
         </div>
       </section>

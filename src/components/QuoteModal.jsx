@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { X, Send, MessageCircle, CheckCircle2 } from 'lucide-react'
 import { products, company } from '../data/site.js'
 import { waHref } from './ui.jsx'
+import { sendEnquiry } from '../lib/sendEnquiry.js'
 
 const empty = { name: '', phone: '', email: '', product: '', message: '' }
 
@@ -30,12 +31,15 @@ export default function QuoteModal({ open, product, onClose }) {
   const [f, setF] = useState(empty)
   const [errors, setErrors] = useState({})
   const [done, setDone] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [failed, setFailed] = useState(false)
 
   useEffect(() => {
     if (open) {
       setF({ ...empty, product })
       setErrors({})
       setDone(false)
+      setFailed(false)
     }
   }, [open, product])
 
@@ -52,15 +56,21 @@ export default function QuoteModal({ open, product, onClose }) {
 
   const set = (k) => (e) => setF((s) => ({ ...s, [k]: e.target.value }))
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
     const errs = validate(f)
     setErrors(errs)
     if (Object.keys(errs).length) return
-    const subject = encodeURIComponent(`Quote request — ${f.product || 'Winding machinery'}`)
-    const body = encodeURIComponent(buildMessage(f))
-    window.location.href = `mailto:${company.email}?subject=${subject}&body=${body}`
-    setDone(true)
+    setSending(true)
+    setFailed(false)
+    try {
+      await sendEnquiry(f, `Quote request — ${f.product || 'Winding machinery'}`)
+      setDone(true)
+    } catch {
+      setFailed(true)
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -84,8 +94,8 @@ export default function QuoteModal({ open, product, onClose }) {
             {done ? (
               <div className="modal-done">
                 <CheckCircle2 size={48} />
-                <h3>Your email app should open now</h3>
-                <p>Send the pre-filled message and our team will get back to you. Prefer WhatsApp?</p>
+                <h3>Enquiry sent — thank you!</h3>
+                <p>Our team has received your request and will get back to you shortly. Prefer WhatsApp?</p>
                 <a className="btn btn-accent" href={waHref(buildMessage(f))} target="_blank" rel="noreferrer">
                   <MessageCircle size={16} /> Send on WhatsApp
                 </a>
@@ -126,8 +136,13 @@ export default function QuoteModal({ open, product, onClose }) {
                   Your requirement
                   <textarea rows={3} value={f.message} onChange={set('message')} placeholder="Yarn type, count range, package type, number of heads…" />
                 </label>
-                <button className="btn btn-accent btn-block" type="submit">
-                  Send enquiry <Send size={16} />
+                {failed && (
+                  <p className="form-error" role="alert">
+                    Couldn’t send right now. Please try again, or <a href={waHref(buildMessage(f))} target="_blank" rel="noreferrer">WhatsApp us</a> / call {company.phones[0]}.
+                  </p>
+                )}
+                <button className="btn btn-accent btn-block" type="submit" disabled={sending}>
+                  {sending ? 'Sending…' : 'Send enquiry'} <Send size={16} />
                 </button>
               </form>
             )}

@@ -44,13 +44,12 @@ export default function Showroom({ onQuote, id }) {
           <AnimatePresence mode="wait">
             <motion.div key={`${mode}-${p.slug}-${photo}`} className="show-fill" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
               {mode === '3d' ? (
-                <Viewer3D kind={p.kind} heads={p.heads} color={color} multi={multi} autoRotate={auto} zoom />
+                <Viewer3D kind={p.kind} heads={p.heads} color={color} multi={multi} autoRotate={auto} />
               ) : (
                 <SmartImg src={p.images[photo]} fallbackSrc={p.remoteImages?.[photo]} alt={p.name} className="show-photo" fallbackLabel={p.onRequest ? 'Photos on request' : ''} />
               )}
             </motion.div>
           </AnimatePresence>
-          {mode === '3d' && <span className="drag-hint">Drag to rotate · scroll to zoom</span>}
         </div>
 
         {mode === '3d' ? (

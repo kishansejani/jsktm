@@ -2,7 +2,6 @@ import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, ShieldCheck, Gauge, Wrench, Cpu, Check, MousePointer2, Move3d, Phone, Mail, MessageCircle, Users, Factory, CalendarCheck } from 'lucide-react'
-import { DepthViewer } from '../components/Viewer3D.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import MachineFinder from '../components/MachineFinder.jsx'
 import Showroom from '../components/Showroom.jsx'
@@ -74,8 +73,19 @@ export default function Home({ onQuote }) {
           </div>
 
           <motion.div className="hero-art" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, duration: 1 }}>
-            <DepthViewer src="/3d/hero" strength={0.1} fallback="3D view is not supported on this device." />
-            <span className="drag-hint hint-hero"><MousePointer2 size={14} /> Move or drag to look around</span>
+            <div className="hero-media">
+              <div className="hm-main">
+                <SmartImg src="/hero-main.jpg" alt="JSK assembly / cheese winding machine" />
+                <span className="hm-badge">Assembly / Cheese winding</span>
+              </div>
+              <Link to="/products/rewinding-cone-winding-machine" className="hm-sub" aria-label="Rewinding / cone winding machine">
+                <SmartImg src="/Cone-Winding-1.jpg" alt="JSK cone winding machine" />
+                <span>
+                  <b>Cone winding</b>
+                  <small>View machine →</small>
+                </span>
+              </Link>
+            </div>
             <div className="float-chip fc-a">
               <strong><Counter value={752} suffix="+" /></strong>
               <span>Happy customers</span>
@@ -96,7 +106,7 @@ export default function Home({ onQuote }) {
           <SectionHead
             eyebrow="3D showroom"
             title="Turn our machines around in your *hands*"
-            text="Pick a machine, spin it, zoom in and change the yarn colour — then switch to real photographs."
+            text="Pick a machine, click and spin it, change the yarn colour — then switch to real photographs."
           />
           <Reveal>
             <Showroom onQuote={onQuote} />
