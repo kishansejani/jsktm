@@ -64,6 +64,7 @@ export const products = [
     blurb:
       'A parallel / cheese winder that gives every yarn equal tension through individual yarn-detecting sensors — cutting single-ply wind-ups and producing packages ready for further processing.',
     images: ['/Assembly-Winding-3ply.jpg', '/Assembly-Winding-1.jpg'], // local files in /public
+    depth3d: ['/3d/hero', '/3d/assembly', '/3d/assembly3'], // cut-out + depth map → real-photo 3D
     features: [
       'Random / drum winding',
       'Hard-anodized, long-life metallic drum',
@@ -87,6 +88,7 @@ export const products = [
     blurb:
       'Designed to produce uniform, hard-wound final packages from staple spun yarns made of natural and man-made fibres.',
     images: ['/Cone-Winding-1.jpg'],
+    depth3d: ['/3d/cone'],
     features: [
       'Long-life metallic drum',
       'Individual spindle length counting',

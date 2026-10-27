@@ -2,6 +2,7 @@ import { Component, lazy, Suspense, useEffect, useMemo, useRef, useState } from 
 
 const MachineCanvas = lazy(() => import('./Scene3D.jsx').then((m) => ({ default: m.MachineCanvas })))
 const HeroCanvas = lazy(() => import('./Scene3D.jsx').then((m) => ({ default: m.HeroCanvas })))
+const DepthCanvas = lazy(() => import('./DepthScene.jsx').then((m) => ({ default: m.DepthCanvas })))
 const AnatomyCanvas = lazy(() => import('./Scene3D.jsx').then((m) => ({ default: m.AnatomyCanvas })))
 
 function hasWebGL() {
@@ -77,6 +78,15 @@ export function AnatomyViewer(props) {
   return (
     <Wrap fallback={<Fallback />}>
       <AnatomyCanvas {...props} />
+    </Wrap>
+  )
+}
+
+/** Real photo turned into a depth-parallax 3D view (cut-out + depth map). */
+export function DepthViewer({ src, strength, fallback }) {
+  return (
+    <Wrap fallback={<Fallback>{fallback}</Fallback>}>
+      <DepthCanvas src={src} strength={strength} />
     </Wrap>
   )
 }

@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, ShieldCheck, Gauge, Wrench, Cpu, Check, MousePointer2, Move3d, Phone, Mail, MessageCircle, Users, Factory, CalendarCheck } from 'lucide-react'
-import ThreadHero from '../components/ThreadHero.jsx'
+import { DepthViewer } from '../components/Viewer3D.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import MachineFinder from '../components/MachineFinder.jsx'
 import Showroom from '../components/Showroom.jsx'
@@ -74,8 +74,8 @@ export default function Home({ onQuote }) {
           </div>
 
           <motion.div className="hero-art" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, duration: 1 }}>
-            <ThreadHero />
-            <span className="drag-hint hint-hero"><MousePointer2 size={14} /> Drag to rotate</span>
+            <DepthViewer src="/3d/hero" strength={0.1} fallback="3D view is not supported on this device." />
+            <span className="drag-hint hint-hero"><MousePointer2 size={14} /> Move or drag to look around</span>
             <div className="float-chip fc-a">
               <strong><Counter value={752} suffix="+" /></strong>
               <span>Happy customers</span>
@@ -84,13 +84,6 @@ export default function Home({ onQuote }) {
               <strong><Counter value={362} suffix="+" /></strong>
               <span>Installations</span>
             </div>
-            <a href="#showroom" className="hero-photo" aria-label="See machines in the 3D showroom">
-              <SmartImg src="/Assembly-Winding-3ply.jpg" alt="JSK assembly winding machine" />
-              <span>
-                <b>Assembly winder</b>
-                <small>Real machine →</small>
-              </span>
-            </a>
           </motion.div>
         </div>
       </section>
