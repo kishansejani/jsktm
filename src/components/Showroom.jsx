@@ -46,7 +46,7 @@ export default function Showroom({ onQuote, id }) {
               {mode === '3d' ? (
                 <Viewer3D kind={p.kind} heads={p.heads} color={color} multi={multi} autoRotate={auto} zoom />
               ) : (
-                <SmartImg src={p.images[photo]} alt={p.name} className="show-photo" fallbackLabel={p.onRequest ? 'Photos on request' : ''} />
+                <SmartImg src={p.images[photo]} fallbackSrc={p.remoteImages?.[photo]} alt={p.name} className="show-photo" fallbackLabel={p.onRequest ? 'Photos on request' : ''} />
               )}
             </motion.div>
           </AnimatePresence>
@@ -66,7 +66,7 @@ export default function Showroom({ onQuote, id }) {
             <div className="swatches">
               {p.images.map((src, i) => (
                 <button key={i} className={`thumb-sm ${photo === i ? 'on' : ''}`} onClick={() => setPhoto(i)} aria-label={`Photo ${i + 1}`}>
-                  <SmartImg src={src} alt="" />
+                  <SmartImg src={src} fallbackSrc={p.remoteImages?.[i]} alt="" />
                 </button>
               ))}
             </div>

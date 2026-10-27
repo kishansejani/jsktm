@@ -1,11 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { assets, company } from '../data/site.js'
+import { SplitText } from './fx.jsx'
 
 /** Image that falls back to a designed placeholder if the remote file fails. */
-export function SmartImg({ src, alt, className = '', fallbackLabel, ...rest }) {
-  const [failed, setFailed] = useState(!src)
-  if (failed) {
+export function SmartImg({ src, alt, className = '', fallbackLabel, fallbackSrc, ...rest }) {
+  const [cur, setCur] = useState(src || fallbackSrc || null)
+  const [tried, setTried] = useState(false)
+  useEffect(() => {
+    setCur(src || fallbackSrc || null)
+    setTried(false)
+  }, [src, fallbackSrc])
+  if (!cur) {
     return (
       <div className={`img-fallback ${className}`} role="img" aria-label={alt}>
         <svg viewBox="0 0 120 120" aria-hidden="true">
@@ -18,12 +24,17 @@ export function SmartImg({ src, alt, className = '', fallbackLabel, ...rest }) {
   }
   return (
     <img
-      src={src}
+      src={cur}
       alt={alt}
       className={className}
       loading="lazy"
       referrerPolicy="no-referrer"
-      onError={() => setFailed(true)}
+      onError={() => {
+        if (!tried && fallbackSrc && cur !== fallbackSrc) {
+          setTried(true)
+          setCur(fallbackSrc)
+        } else setCur(null)
+      }}
       {...rest}
     />
   )
@@ -90,11 +101,19 @@ export function Counter({ value, suffix = '', plain = false }) {
 
 export function SectionHead({ eyebrow, title, text, center = false }) {
   return (
-    <Reveal className={`section-head ${center ? 'center' : ''}`}>
-      {eyebrow && <span className="eyebrow">{eyebrow}</span>}
-      <h2>{title}</h2>
-      {text && <p>{text}</p>}
-    </Reveal>
+    <div className={`section-head ${center ? 'center' : ''}`}>
+      {eyebrow && (
+        <Reveal as="span" className="eyebrow" y={10}>
+          {eyebrow}
+        </Reveal>
+      )}
+      <SplitText as="h2" text={title} inView />
+      {text && (
+        <Reveal as="p" delay={0.15} y={14}>
+          {text}
+        </Reveal>
+      )}
+    </div>
   )
 }
 
@@ -143,16 +162,20 @@ export function PageHero({ eyebrow, title, text, crumbs = [] }) {
 
 export function Marquee({ items }) {
   const row = [...items, ...items]
+  const Row = ({ rev }) => (
+    <div className={`marquee-track ${rev ? 'rev' : ''}`}>
+      {row.map((t, i) => (
+        <span key={i} className={i % 2 ? 'solid' : ''}>
+          {t}
+          <i />
+        </span>
+      ))}
+    </div>
+  )
   return (
     <div className="marquee" aria-hidden="true">
-      <div className="marquee-track">
-        {row.map((t, i) => (
-          <span key={i}>
-            {t}
-            <i />
-          </span>
-        ))}
-      </div>
+      <Row />
+      <Row rev />
     </div>
   )
 }

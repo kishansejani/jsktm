@@ -26,8 +26,8 @@ export const assets = {
   logo: img('img/logo.png'),
   logoMobile: '/mobilelogo.png', // your local logo (public/mobilelogo.png)
   banner: img('img/banner12.jpg'),
-  thread: img('img/thread.jpg'),
-  vab: img('img/vab.jpg'),
+  thread: '/thread.jpg', // local (public/thread.jpg)
+  vab: '/vab.jpg', // local (public/vab.jpg)
   bg: img('images/background/bg5.jpg'),
   certs: [
     { name: 'MSME', src: img('img/certi/msme.png') },
@@ -63,7 +63,7 @@ export const products = [
     stage: 'doubling',
     blurb:
       'A parallel / cheese winder that gives every yarn equal tension through individual yarn-detecting sensors — cutting single-ply wind-ups and producing packages ready for further processing.',
-    images: [img('img/newdesign/Assembly-Winding-3ply.jpg'), img('img/newdesign/Assembly-Winding-1.jpg')],
+    images: ['/Assembly-Winding-3ply.jpg', '/Assembly-Winding-1.jpg'], // local files in /public
     features: [
       'Random / drum winding',
       'Hard-anodized, long-life metallic drum',
@@ -86,7 +86,7 @@ export const products = [
     stage: 'final',
     blurb:
       'Designed to produce uniform, hard-wound final packages from staple spun yarns made of natural and man-made fibres.',
-    images: [img('img/newdesign/Cone-Winding-1.jpg')],
+    images: ['/Cone-Winding-1.jpg'],
     features: [
       'Long-life metallic drum',
       'Individual spindle length counting',
@@ -108,7 +108,8 @@ export const products = [
     stage: 'dyeing',
     blurb:
       'Built to produce soft dye packages that meet yarn-dyeing industry requirements, with uniform density on perforated dye tubes or dye springs.',
-    images: [img('img/newdesign/Soft-Winding-1.jpg')],
+    images: ['/Soft-Winding-1.jpg'], // add public/Soft-Winding-1.jpg ; falls back to jsktm.com
+    remoteImages: [img('img/newdesign/Soft-Winding-1.jpg')],
     features: [
       'Random / drum winding',
       'Hard-anodized, long-life metallic drum',

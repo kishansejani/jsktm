@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import Header from './components/Header.jsx'
 import Footer from './components/Footer.jsx'
+import { Cursor } from './components/fx.jsx'
 import ScrollProgress from './components/ScrollProgress.jsx'
 import FloatingActions from './components/FloatingActions.jsx'
 import QuoteModal from './components/QuoteModal.jsx'
@@ -25,6 +26,7 @@ export default function App() {
 
   return (
     <>
+      <Cursor />
       <ScrollProgress />
       <Header onQuote={() => openQuote()} />
       <AnimatePresence mode="wait">

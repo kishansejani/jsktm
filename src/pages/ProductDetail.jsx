@@ -44,7 +44,7 @@ export default function ProductDetail({ onQuote }) {
                 ) : (
                   <AnimatePresence mode="wait">
                     <motion.div key={active} initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-                      <SmartImg src={imgs[active]} alt={product.name} fallbackLabel={product.onRequest ? 'Specifications on request' : ''} />
+                      <SmartImg src={imgs[active]} fallbackSrc={product.remoteImages?.[active]} alt={product.name} fallbackLabel={product.onRequest ? 'Specifications on request' : ''} />
                     </motion.div>
                   </AnimatePresence>
                 )}
@@ -53,7 +53,7 @@ export default function ProductDetail({ onQuote }) {
                 <div className="thumbs">
                   {imgs.map((src, i) => (
                     <button key={i} className={i === active ? 'on' : ''} onClick={() => setActive(i)} aria-label={`View image ${i + 1}`}>
-                      <SmartImg src={src} alt="" />
+                      <SmartImg src={src} fallbackSrc={product.remoteImages?.[i]} alt="" />
                     </button>
                   ))}
                 </div>

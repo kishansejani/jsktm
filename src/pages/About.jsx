@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Spot } from '../components/fx.jsx'
 import { Target, Check, ArrowRight } from 'lucide-react'
 import { PageHero, Reveal, SectionHead, Counter, SmartImg } from '../components/ui.jsx'
 import { pillars, vision, whyUs, stats, assets, company, process } from '../data/site.js'
@@ -15,8 +16,13 @@ export default function About({ onQuote }) {
 
       <section className="section">
         <div className="container split split-center">
-          <Reveal className="photo-frame">
-            <SmartImg src={assets.vab} alt="JSK Tex Mech manufacturing" />
+          <Reveal className="photo-stack">
+            <Spot tilt className="photo-frame">
+              <SmartImg src={assets.vab} alt="Engineering drawings and measuring tools" />
+            </Spot>
+            <Spot tilt className="photo-frame photo-2">
+              <SmartImg src={assets.thread} alt="Coloured yarn cones" />
+            </Spot>
           </Reveal>
           <div>
             <SectionHead

@@ -1,6 +1,7 @@
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { ArrowRight, ArrowUpRight, ShieldCheck, Gauge, Wrench, Cpu, Check, MousePointer2 } from 'lucide-react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { ArrowRight, ArrowUpRight, ShieldCheck, Gauge, Wrench, Cpu, Check, MousePointer2, Move3d } from 'lucide-react'
 import ThreadHero from '../components/ThreadHero.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import MachineFinder from '../components/MachineFinder.jsx'
@@ -8,78 +9,100 @@ import Showroom from '../components/Showroom.jsx'
 import Anatomy from '../components/Anatomy.jsx'
 import FAQ from '../components/FAQ.jsx'
 import { Reveal, Counter, SectionHead, Marquee, SmartImg } from '../components/ui.jsx'
-import { products, stats, process, assets, whyUs, company } from '../data/site.js'
+import { SplitText, Spot, Magnetic } from '../components/fx.jsx'
+import { products, stats, process, assets, company } from '../data/site.js'
 
 const features = [
-  { icon: Cpu, title: 'Smart per-head control', text: 'AC co-axial motor, optical yarn sensor and length counting on every spindle.' },
-  { icon: Gauge, title: 'Package perfection', text: 'Hard-anodized grooved drum and programmable ribbon braking for consistent packages.' },
-  { icon: Wrench, title: 'Low maintenance', text: 'New-generation technology with simplicity of use and graded-material components.' },
-  { icon: ShieldCheck, title: 'Inspected at every stage', text: 'Engineered solutions, stage-wise inspection and dedicated after-sales support.' },
+  { icon: Cpu, title: 'Smart per-head control', text: 'AC co-axial motor, optical sensor and length counting on every spindle.' },
+  { icon: Gauge, title: 'Package perfection', text: 'Hard-anodized grooved drum and programmable ribbon braking.' },
+  { icon: Wrench, title: 'Low maintenance', text: 'New-generation technology, simple to run, graded-material parts.' },
+  { icon: ShieldCheck, title: 'Inspected at every stage', text: 'Engineered solutions, stage-wise inspection, after-sales support.' },
 ]
 
 export default function Home({ onQuote }) {
+  const heroRef = useRef(null)
+  const bandRef = useRef(null)
+  const lineRef = useRef(null)
+  const { scrollYProgress: band } = useScroll({ target: bandRef, offset: ['start end', 'end start'] })
+  const bandY = useTransform(band, [0, 1], ['-14%', '14%'])
+  const bandScale = useTransform(band, [0, 0.5, 1], [1.15, 1.05, 1.15])
+  const { scrollYProgress: line } = useScroll({ target: lineRef, offset: ['start 75%', 'end 65%'] })
+
+  const onHeroMove = (e) => {
+    const r = heroRef.current.getBoundingClientRect()
+    heroRef.current.style.setProperty('--mx', `${e.clientX - r.left}px`)
+    heroRef.current.style.setProperty('--my', `${e.clientY - r.top}px`)
+  }
+
   return (
     <>
       {/* HERO */}
-      <section className="hero">
+      <section className="hero" ref={heroRef} onPointerMove={onHeroMove}>
         <div className="hero-bg" aria-hidden="true">
           <span className="orb orb-a" />
           <span className="orb orb-b" />
+          <span className="orb orb-c" />
           <span className="grid-lines" />
+          <span className="hero-spot" />
         </div>
         <div className="container hero-grid">
           <div className="hero-copy">
             <motion.span className="pill" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}>
               <i /> Yarn winding machinery &amp; spares
             </motion.span>
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.8 }}>
-              Let’s convert your idea into <em>reality.</em>
-            </motion.h1>
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.8 }}>
+            <SplitText as="h1" text="Let’s convert your idea into *reality.*" delay={0.15} />
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 0.8 }}>
               Cost-effective, technologically advanced post-spinning winding machines — shaping yarns for being part of your growth.
             </motion.p>
-            <motion.div className="hero-cta" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-              <button className="btn btn-accent btn-lg" onClick={() => onQuote()}>
-                Get a quote <ArrowUpRight size={18} />
-              </button>
-              <a href="#showroom" className="btn btn-outline-light btn-lg">
-                Explore in 3D <ArrowRight size={18} />
-              </a>
+            <motion.div className="hero-cta" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
+              <Magnetic>
+                <button className="btn btn-accent btn-lg" onClick={() => onQuote()}>
+                  Get a quote <ArrowUpRight size={18} />
+                </button>
+              </Magnetic>
+              <Magnetic>
+                <a href="#showroom" className="btn btn-outline btn-lg">
+                  <Move3d size={18} /> Explore in 3D
+                </a>
+              </Magnetic>
             </motion.div>
-            <motion.ul className="hero-points" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
+            <motion.ul className="hero-points" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>
               <li><Check size={16} /> Made in Gujarat</li>
               <li><Check size={16} /> ISO &amp; MSME certified</li>
               <li><Check size={16} /> After-sales support</li>
             </motion.ul>
           </div>
-          <motion.div className="hero-art" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 1 }}>
+
+          <motion.div className="hero-art" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, duration: 1 }}>
             <ThreadHero />
             <span className="drag-hint hint-hero"><MousePointer2 size={14} /> Drag to rotate</span>
+            <div className="float-chip fc-a">
+              <strong><Counter value={752} suffix="+" /></strong>
+              <span>Happy customers</span>
+            </div>
+            <div className="float-chip fc-b">
+              <strong><Counter value={362} suffix="+" /></strong>
+              <span>Installations</span>
+            </div>
+            <a href="#showroom" className="hero-photo" aria-label="See machines in the 3D showroom">
+              <SmartImg src="/Assembly-Winding-3ply.jpg" alt="JSK assembly winding machine" />
+              <span>
+                <b>Assembly winder</b>
+                <small>Real machine →</small>
+              </span>
+            </a>
           </motion.div>
-        </div>
-
-        <div className="container">
-          <div className="stat-strip">
-            {stats.map((s) => (
-              <div key={s.label}>
-                <strong>
-                  <Counter value={s.value} suffix={s.suffix} plain={s.plain} />
-                </strong>
-                <span>{s.label}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
-      <Marquee items={['Assembly winding', 'Cone winding', 'Soft dye packages', 'Jumbo packages', 'Pre-application winding', 'Winding spares']} />
+      <Marquee items={['Assembly winding', 'Cone winding', 'Soft dye packages', 'Jumbo packages', 'Pre-application', 'Winding spares']} />
 
       {/* 3D SHOWROOM */}
       <section className="section" id="showroom">
         <div className="container">
           <SectionHead
             eyebrow="3D showroom"
-            title="Turn our machines around in your hands"
+            title="Turn our machines around in your *hands*"
             text="Pick a machine, spin it, zoom in and change the yarn colour — then switch to real photographs."
           />
           <Reveal>
@@ -88,60 +111,123 @@ export default function Home({ onQuote }) {
         </div>
       </section>
 
-      {/* ANATOMY */}
+      {/* PRODUCTS */}
       <section className="section section-alt">
         <div className="container">
-          <SectionHead eyebrow="Anatomy of a winder" title="Scroll to look inside a winding head" text="Every head carries its own motor, sensor and counter — here is how the parts work together." />
-          <Anatomy />
-        </div>
-      </section>
-
-      {/* PRODUCTS */}
-      <section className="section">
-        <div className="container">
-          <SectionHead
-            eyebrow="The range"
-            title="Winding machines built around your yarn"
-            text="From assembly and cone winding to soft-dye packages — one manufacturer, one standard of engineering."
-          />
+          <SectionHead eyebrow="The range" title="Winding machines built around your *yarn*" text="From assembly and cone winding to soft-dye packages — one manufacturer, one standard of engineering." />
           <div className="grid-products">
             {products.slice(0, 3).map((p, i) => (
               <ProductCard key={p.slug} product={p} index={i} onQuote={onQuote} />
             ))}
           </div>
           <Reveal className="center-cta">
-            <Link to="/products" className="btn btn-outline-light">
-              Explore all machines <ArrowRight size={16} />
-            </Link>
+            <Magnetic>
+              <Link to="/products" className="btn btn-outline">
+                Explore all machines <ArrowRight size={16} />
+              </Link>
+            </Magnetic>
           </Reveal>
         </div>
       </section>
 
-      {/* WHY */}
-      <section className="section section-alt">
-        <div className="container split">
-          <div>
-            <SectionHead
-              eyebrow="Why JSK"
-              title="Technology that stays simple to run"
-              text="We keep updating our methods to meet industry demands — with customers central to every product's life cycle."
-            />
-            <ul className="why-list">
-              {whyUs.map((w, i) => (
-                <Reveal as="li" key={w} delay={i * 0.07}>
-                  <Check size={18} /> {w}
-                </Reveal>
-              ))}
-            </ul>
-          </div>
-          <div className="feature-grid">
-            {features.map((f, i) => (
-              <Reveal key={f.title} delay={i * 0.08} className="feature">
-                <f.icon size={26} />
-                <h3>{f.title}</h3>
-                <p>{f.text}</p>
+      {/* BENTO */}
+      <section className="section">
+        <div className="container">
+          <SectionHead eyebrow="Why JSK" title="Technology that stays *simple* to run" text="We keep updating our methods to meet industry demands — with customers central to every product's life cycle." />
+          <div className="bento">
+            <Reveal className="bento-cell b-photo">
+              <Spot className="tile tile-photo">
+                <SmartImg src={assets.vab} alt="Engineering drawings and measuring tools" />
+                <div className="tile-over">
+                  <span className="tag">Engineered</span>
+                  <h3>Inspected at every stage of production</h3>
+                  <p>Innovation, engineered solutions and after-sales support make us a trusted, preferred machinery manufacturer.</p>
+                </div>
+              </Spot>
+            </Reveal>
+            {[stats[0], stats[1]].map((s, i) => (
+              <Reveal key={s.label} delay={0.08 * (i + 1)} className={`bento-cell b-stat b-stat-${i}`}>
+                <Spot className="tile tile-stat">
+                  <strong className="big-num">
+                    <Counter value={s.value} suffix={s.suffix} />
+                  </strong>
+                  <span>{s.label}</span>
+                  <i className="tile-glow" />
+                </Spot>
               </Reveal>
             ))}
+            {features.map((f, i) => (
+              <Reveal key={f.title} delay={0.06 * i} className="bento-cell b-feat">
+                <Spot tilt className="tile tile-feat">
+                  <span className="ico"><f.icon size={22} /></span>
+                  <h3>{f.title}</h3>
+                  <p>{f.text}</p>
+                </Spot>
+              </Reveal>
+            ))}
+            <Reveal className="bento-cell b-certs">
+              <Spot className="tile tile-certs">
+                <h3>Empowered by</h3>
+                <div className="cert-row">
+                  {assets.certs.map((c) => (
+                    <span className="cert-chip" key={c.name}>
+                      <SmartImg src={c.src} alt={c.name} fallbackLabel={c.name} />
+                    </span>
+                  ))}
+                </div>
+              </Spot>
+            </Reveal>
+            <Reveal delay={0.1} className="bento-cell b-since">
+              <Spot className="tile tile-since">
+                <strong className="big-num">
+                  <Counter value={company.since} plain />
+                </strong>
+                <span>Building machines · {stats[2].value}+ domestic markets</span>
+              </Spot>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* PARALLAX BAND */}
+      <section className="band dark-zone" ref={bandRef}>
+        <motion.div className="band-img" style={{ y: bandY, scale: bandScale }}>
+          <SmartImg src={assets.thread} alt="Rows of coloured yarn cones" />
+        </motion.div>
+        <div className="band-shade" />
+        <div className="container band-in">
+          <Reveal>
+            <span className="eyebrow">Our promise</span>
+          </Reveal>
+          <SplitText as="h2" inView text="Shaping yarns for being part of your *growth.*" />
+        </div>
+      </section>
+
+      {/* ANATOMY */}
+      <section className="section section-alt">
+        <div className="container">
+          <SectionHead eyebrow="Anatomy of a winder" title="Scroll to look *inside* a winding head" text="Every head carries its own motor, sensor and counter — here is how the parts work together." />
+          <Anatomy />
+        </div>
+      </section>
+
+      {/* PROCESS */}
+      <section className="section">
+        <div className="container">
+          <SectionHead eyebrow="How we work" title="From your idea to a *running* machine" center />
+          <div className="process-wrap" ref={lineRef}>
+            <div className="process-line" aria-hidden="true">
+              <motion.i style={{ scaleX: line }} />
+            </div>
+            <ol className="process">
+              {process.map((p, i) => (
+                <Reveal as="li" key={p.n} delay={i * 0.12}>
+                  <span>{p.n}</span>
+                  <h3>{p.title}</h3>
+                  <p>{p.text}</p>
+                </Reveal>
+              ))}
+            </ol>
           </div>
         </div>
       </section>
@@ -160,65 +246,10 @@ export default function Home({ onQuote }) {
         </div>
       </section>
 
-      {/* PROCESS */}
-      <section className="section">
-        <div className="container">
-          <SectionHead eyebrow="How we work" title="From your idea to a running machine" center />
-          <ol className="process">
-            {process.map((p, i) => (
-              <Reveal as="li" key={p.n} delay={i * 0.1}>
-                <span>{p.n}</span>
-                <h3>{p.title}</h3>
-                <p>{p.text}</p>
-              </Reveal>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* ABOUT TEASER */}
-      <section className="section section-alt">
-        <div className="container split split-center">
-          <Reveal className="photo-frame">
-            <SmartImg src={assets.thread} alt="Yarn on a winding machine" />
-            <div className="photo-badge">
-              <strong>Since {company.since}</strong>
-              <span>Trusted winding partner</span>
-            </div>
-          </Reveal>
-          <div>
-            <SectionHead
-              eyebrow="About us"
-              title="Empowering customers while building better business"
-              text="JSK Tex Mech is a yarn winding machinery and spares manufacturer serving the textile industry since 2012 — combining new-generation technology with simplicity of use and low maintenance."
-            />
-            <Reveal>
-              <Link to="/about" className="btn btn-outline-light">
-                Our story <ArrowRight size={16} />
-              </Link>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* CERTS */}
-      <section className="certs-section">
-        <div className="container">
-          <SectionHead eyebrow="Recognition" title="Empowered by" center />
-          <Reveal className="cert-row">
-            {assets.certs.map((c) => (
-              <span className="cert-chip" key={c.name}>
-                <SmartImg src={c.src} alt={c.name} fallbackLabel={c.name} />
-              </span>
-            ))}
-          </Reveal>
-        </div>
-      </section>
-
       {/* FAQ */}
       <section className="section">
         <div className="container split">
-          <SectionHead eyebrow="FAQ" title="Questions, answered" text="Can’t find what you need? Call or message us — we’ll respond personally." />
+          <SectionHead eyebrow="FAQ" title="Questions, *answered*" text="Can’t find what you need? Call or message us — we’ll respond personally." />
           <Reveal>
             <FAQ />
           </Reveal>
@@ -226,19 +257,25 @@ export default function Home({ onQuote }) {
       </section>
 
       {/* CTA */}
-      <section className="cta-band">
-        <div className="container cta-in">
-          <Reveal>
-            <h2>Ready to wind better?</h2>
-            <p>Tell us your yarn and package requirement — we’ll respond with a tailored quotation.</p>
-          </Reveal>
-          <Reveal delay={0.1} className="cta-actions">
-            <button className="btn btn-white btn-lg" onClick={() => onQuote()}>
-              Request a quote <ArrowUpRight size={18} />
-            </button>
-            <Link to="/contact" className="btn btn-outline-light btn-lg">
-              Contact us
-            </Link>
+      <section className="cta-wrap">
+        <div className="container">
+          <Reveal className="cta-card">
+            <div className="cta-in">
+              <div>
+                <h2>Ready to wind better?</h2>
+                <p>Tell us your yarn and package requirement — we’ll respond with a tailored quotation.</p>
+              </div>
+              <div className="cta-actions">
+                <Magnetic>
+                  <button className="btn btn-white btn-lg" onClick={() => onQuote()}>
+                    Request a quote <ArrowUpRight size={18} />
+                  </button>
+                </Magnetic>
+                <Link to="/contact" className="btn btn-outline-light btn-lg">
+                  Contact us
+                </Link>
+              </div>
+            </div>
           </Reveal>
         </div>
       </section>
