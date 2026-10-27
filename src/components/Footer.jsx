@@ -73,6 +73,8 @@ export default function Footer() {
         ))}
       </div>
 
+      <div className="footer-mark" aria-hidden="true">JSK TEX MECH</div>
+
       <div className="container footer-bottom">
         <span>© {new Date().getFullYear()} {company.name} Industries. All rights reserved.</span>
         <span>Shaping yarns for being part of your growth.</span>

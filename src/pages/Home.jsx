@@ -1,14 +1,14 @@
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { ArrowRight, ArrowUpRight, ShieldCheck, Gauge, Wrench, Cpu, Check, MousePointer2, Move3d } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, ShieldCheck, Gauge, Wrench, Cpu, Check, MousePointer2, Move3d, Phone, Mail, MessageCircle } from 'lucide-react'
 import ThreadHero from '../components/ThreadHero.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import MachineFinder from '../components/MachineFinder.jsx'
 import Showroom from '../components/Showroom.jsx'
 import Anatomy from '../components/Anatomy.jsx'
 import FAQ from '../components/FAQ.jsx'
-import { Reveal, Counter, SectionHead, Marquee, SmartImg } from '../components/ui.jsx'
+import { Reveal, Counter, SectionHead, Marquee, SmartImg, telHref, waHref } from '../components/ui.jsx'
 import { SplitText, Spot, Magnetic } from '../components/fx.jsx'
 import { products, stats, process, assets, company } from '../data/site.js'
 
@@ -152,7 +152,7 @@ export default function Home({ onQuote }) {
                     <Counter value={s.value} suffix={s.suffix} />
                   </strong>
                   <span>{s.label}</span>
-                  <i className="tile-glow" />
+                  <i className="rings" aria-hidden="true" />
                 </Spot>
               </Reveal>
             ))}
@@ -183,6 +183,7 @@ export default function Home({ onQuote }) {
                   <Counter value={company.since} plain />
                 </strong>
                 <span>Building machines · {stats[2].value}+ domestic markets</span>
+                <i className="rings" aria-hidden="true" />
               </Spot>
             </Reveal>
           </div>
@@ -247,9 +248,31 @@ export default function Home({ onQuote }) {
       </section>
 
       {/* FAQ */}
-      <section className="section">
-        <div className="container split">
-          <SectionHead eyebrow="FAQ" title="Questions, *answered*" text="Can’t find what you need? Call or message us — we’ll respond personally." />
+      <section className="section section-alt">
+        <div className="container split faq-split">
+          <div className="faq-side">
+            <SectionHead stack eyebrow="FAQ" title="Questions, *answered*" text="Can’t find what you need? Call or message us — we’ll respond personally." />
+            <Reveal delay={0.1}>
+              <Spot className="help-card">
+                <h3>Still have a question?</h3>
+                <p>Talk to our team directly — we reply personally.</p>
+                <a className="help-line" href={telHref(company.phones[0])}>
+                  <Phone size={18} /> {company.phones[0]}
+                </a>
+                <a className="help-line" href={`mailto:${company.email}`}>
+                  <Mail size={18} /> {company.email}
+                </a>
+                <div className="help-actions">
+                  <button className="btn btn-accent" onClick={() => onQuote()}>
+                    Get a quote <ArrowUpRight size={16} />
+                  </button>
+                  <a className="btn btn-outline" href={waHref('Hello JSK Tex Mech!')} target="_blank" rel="noreferrer">
+                    <MessageCircle size={16} /> WhatsApp
+                  </a>
+                </div>
+              </Spot>
+            </Reveal>
+          </div>
           <Reveal>
             <FAQ />
           </Reveal>
@@ -260,20 +283,40 @@ export default function Home({ onQuote }) {
       <section className="cta-wrap">
         <div className="container">
           <Reveal className="cta-card">
+            <div className="cta-deco" aria-hidden="true">
+              {['#0fb5ab', '#e84030', '#902888', '#2078b8', '#f09838', '#38b0d8'].map((c, i) => (
+                <span key={c} className={`spool sp-${i}`} style={{ '--c': c }} />
+              ))}
+            </div>
             <div className="cta-in">
-              <div>
+              <div className="cta-copy">
+                <span className="eyebrow">Let’s talk</span>
                 <h2>Ready to wind better?</h2>
                 <p>Tell us your yarn and package requirement — we’ll respond with a tailored quotation.</p>
+                <ul className="cta-points">
+                  <li><Check size={16} /> Free quotation</li>
+                  <li><Check size={16} /> Built to your yarn</li>
+                  <li><Check size={16} /> After-sales support</li>
+                </ul>
               </div>
-              <div className="cta-actions">
-                <Magnetic>
-                  <button className="btn btn-white btn-lg" onClick={() => onQuote()}>
-                    Request a quote <ArrowUpRight size={18} />
-                  </button>
-                </Magnetic>
-                <Link to="/contact" className="btn btn-outline-light btn-lg">
-                  Contact us
-                </Link>
+              <div className="cta-side">
+                <div className="cta-actions">
+                  <Magnetic>
+                    <button className="btn btn-white btn-lg" onClick={() => onQuote()}>
+                      Request a quote <ArrowUpRight size={18} />
+                    </button>
+                  </Magnetic>
+                  <Link to="/contact" className="btn btn-outline-light btn-lg">
+                    Contact us
+                  </Link>
+                </div>
+                <a className="cta-call" href={telHref(company.phones[0])}>
+                  <span><Phone size={18} /></span>
+                  <div>
+                    <small>Call us directly</small>
+                    <b>{company.phones[0]}</b>
+                  </div>
+                </a>
               </div>
             </div>
           </Reveal>

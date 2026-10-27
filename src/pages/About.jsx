@@ -26,6 +26,7 @@ export default function About({ onQuote }) {
           </Reveal>
           <div>
             <SectionHead
+              stack
               eyebrow="Who we are"
               title="Customers sit at the centre of our product life cycle"
               text="We keep updating our methods to meet industry demands. Our new-generation machines combine technology with simplicity of use and low maintenance — grown from a local manufacturer into a supplier for global demand."

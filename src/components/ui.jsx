@@ -99,9 +99,9 @@ export function Counter({ value, suffix = '', plain = false }) {
   )
 }
 
-export function SectionHead({ eyebrow, title, text, center = false }) {
+export function SectionHead({ eyebrow, title, text, center = false, stack = false }) {
   return (
-    <div className={`section-head ${center ? 'center' : ''}`}>
+    <div className={`section-head ${center ? 'center' : ''} ${stack ? 'stack' : ''}`}>
       {eyebrow && (
         <Reveal as="span" className="eyebrow" y={10}>
           {eyebrow}
@@ -161,21 +161,25 @@ export function PageHero({ eyebrow, title, text, crumbs = [] }) {
 }
 
 export function Marquee({ items }) {
-  const row = [...items, ...items]
-  const Row = ({ rev }) => (
+  const row = [...items, ...items, ...items]
+  const Track = ({ rev }) => (
     <div className={`marquee-track ${rev ? 'rev' : ''}`}>
       {row.map((t, i) => (
-        <span key={i} className={i % 2 ? 'solid' : ''}>
+        <span key={i}>
           {t}
-          <i />
+          <b className={`star s${i % 3}`}>✦</b>
         </span>
       ))}
     </div>
   )
   return (
-    <div className="marquee" aria-hidden="true">
-      <Row />
-      <Row rev />
+    <div className="ribbons" aria-hidden="true">
+      <div className="ribbon r-a">
+        <Track />
+      </div>
+      <div className="ribbon r-b">
+        <Track rev />
+      </div>
     </div>
   )
 }
